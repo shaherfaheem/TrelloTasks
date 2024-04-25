@@ -4,7 +4,7 @@
   <title>Login</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="/static/Login.css" type="text/css">
+  <link rel="stylesheet" href="/static/LoginRegist.css" type="text/css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" type="text/css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -16,15 +16,15 @@
 
     <div class="login">
         <h1>Login Page</h1>
+        
         <div class="links">
             <a href="http://127.0.0.1:8080/" class="active">Login</a> 
             <a href="http://127.0.0.1:8080/register">Register</a>
         </div>
-      
         <div class="msg"><center>{{ msg }}</center></div>
-
-        <form method = "POST" action='/login'>
         
+        <form method = "POST" action='/login'>
+          
             <label for='Username'>
               <i class='fas fa-user'></i></label>
             <input id="uname"  type="text" name="uname" placeholder="Enter Username"  required>
