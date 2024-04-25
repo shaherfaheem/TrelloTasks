@@ -1,0 +1,539 @@
+<html>
+
+<head>
+  <title>PROJECT TASKS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/ProjectTasks.css" type="text/css">
+  <link rel="stylesheet" href="/static/modal19.css" type="text/css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+
+  <div>
+    <div id="link">
+      <a href="http://127.0.0.1:8080/newtask"><h3>Create New Task</h3></a> 
+      <a href="http://127.0.0.1:8080/opentasks"><h3>List Of Open Tasks</h3></a>
+      <a href="http://127.0.0.1:8080/completedTasks"><h3>Completed Tasks</h3></a>
+      <a href="http://127.0.0.1:8080/alltasks"><h3>Entire List of Tasks</h3></a>
+      <a href="http://127.0.0.1:8080/logout"><h3>Logout</h3></a>
+    </div></br>
+
+    <h2><center id="registerEmp"> Project Tasks </center></h2>
+    
+    <h2><center hidden id="updateEmployee"> Update Tasks </center></h2>
+    </br>
+    
+  <div id = "fillForm" >
+    <form hidden id="actionForm" name="actionForm" method="POST" action="/taskcreated">
+      <!-- <div class="col-xs-4">
+        ID: -->
+        <input onkeypress="return isNumber(event)" class="form-control" type="hidden" name="id">
+      <!-- </div> -->
+      <div> 
+        Task
+        <input class="task" type="text" name="task">
+      </div>
+      <div>
+        Employee
+        <select class="employee" name="employee"> 
+          <option style="display:none" value=" "></option>
+          <option value="Backend">Backend</option>
+          <option value="Frontend">Frontend</option>
+          <option value="Web Developer">Web Developer</option>
+          <option value="Fullstack Developer">Fullstack Developer</option>
+          <option value="Security Developer">Security Developer</option>
+        </select>
+      </div>
+      <div>
+        Status
+        <select class="status" name="status">
+          <option style="display:none" value=" "></option>
+          <option value="Open">Open</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+      <div>
+        Priority Level
+        <input class="priority" type="number" name="priority" min="1" max="4">
+      </div>
+      <div>
+        Start Date
+        <input class="startdate" type="date" name="startdate">
+      </div>
+      <div>
+        Duration
+        <input class="duration" type="text" name="duration">
+      </div>
+      <div>
+        Deadline
+        <input class="deadline" type="date" name="deadline">
+      </div>
+      </br></br></br>
+        <input class="submit" style="display:none" id="update-user" type="submit" value="Update">
+    </form>
+    <div class="msg"><center>{{ msg }}</center></div>
+  </div><br><br></br>
+</div>
+         
+<div hidden id = "tasksList">
+
+  <table id = "myTable" class = "table">
+    <thead>
+      <tr>
+        <th hidden>ID</th>
+        <th>Task</th>
+        <th>Employee</th>
+        <th>Status</th>
+        <th>Priority Level</th>
+        <th>Start Date</th>
+        <th>Duration</th>
+        <th>Deadline</th>
+        <th><button class="buttons" onclick = "filterTable()"> Filter </button></th>
+        <th><button class="buttons" onclick = "viewLess()"> View Less </button></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in datas %}
+      <tr>
+        <td hidden>{{ item.id}}</td>
+        <td>{{ item.task}}</td>
+        <td>{{ item.employee}}</td>
+        <td>{{ item.status}}</td>
+        <td><center>{{ item.priority}}</center></td>
+        <td>{{ item.startdate}}</td>
+        <td><center>{{ item.duration}}</center></td>
+        <td>{{ item.deadline}}</td>
+        <td><input class="edit" type="submit" value="Edit"
+            onclick="update('{{ item.id}}','{{ item.task}}','{{ item.employee}}','{{ item.status}}','{{ item.priority}}','{{ item.startdate}}','{{ item.duration}}','{{ item.deadline}}')">
+        </td>
+        <td>
+          <button onclick="document.getElementById('id01{{item.id}}').style.display='block'">Delete</button>
+          <div id="id01{{item.id}}" class="modal">
+            <span onclick="document.getElementById('id01{{item.id}}').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <form method="POST" action="/deleteEmployee">
+              <div class="container">
+                <h1>Delete Task</h1>
+                <p>Are you sure you want to delete {{item.task}} ?</p>
+                <input type="text" hidden value="{{item.id}}" name="id">
+                <div class="clearfix">
+                  <button type="button" onclick="document.getElementById('id01{{item.id}}').style.display='none'" class="cancelbtn">Cancel</button>
+                  <button type="submit" class="deletebtn">Delete</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </td>
+        <td><center>
+          <form method="POST" action="/completed">
+            <input type="text" hidden value="{{item.id}}" name="id">
+            <input class="complete" type="submit" value="Mark As Completed">
+          </form>  
+        </center>
+        </td>
+      </tr>
+      {% endfor %}
+</div>
+    </tbody>
+  </table>
+</div>
+<div id="tableTwo">
+  <table id = "myTableTwo" class="table">
+    <thead>
+      <tr>
+        <th hidden>ID</th>
+        <th>Task</th>
+        <th><button class="buttons" onclick = "viewMore()"> View More </button> </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in datas %}
+      <tr>
+        <td hidden>{{ item.id}}</td>
+        <td>{{ item.task}}</td>
+      </tr>
+      {% endfor %}
+  </table>
+</div>
+
+  </div>
+
+ <div hidden id="tableFilter">
+  <table id = "myTableThree" class = "table">
+    <thead>
+      <tr>
+        <th hidden>ID
+          <select type="text" id="myInput" onclick="myFunction()" placeholder="Search for names.." title="Type in a name">
+            <option value=""></option>
+            {% for item in datas %}
+            <option>{{ item.id}}</option>
+            {% endfor %}
+          </select>  
+        </th>
+        <th>Task
+          <select type="text" id="myTaskInput" onclick="myTaskFunction()" placeholder="Search for names.." title="Type in a name">
+            <option value=""></option>
+            {% for item in datas %}
+            <option>{{ item.task}}</option>
+            {% endfor %}
+          </select>
+        </th>
+        <th>Employee
+          <select type="text" id="myEmployeeInput" onclick="myEmployeeFunction()" placeholder="Search for names.." title="Type in a name">
+            <option value=""></option>
+            <option value="Backend">Backend</option>
+            <option value="Frontend">Frontend</option>
+            <option value="Web Developer">Web Developer</option>
+            <option value="Fullstack Developer">Fullstack Developer</option>
+            <option value="Security Developer">Security Developer</option>
+          </select>
+        </th>
+        <th>Status
+          <select type="text" id="myStatusInput" onclick="myStatusFunction()" placeholder="Search for names.." title="Type in a name">
+            <option value=""></option>
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </th>
+        <th>Priority
+          <select type="number" id="myPriorityInput" onclick="myPriorityFunction()" placeholder="Search for names.." title="Type in a name">
+            <option value=""></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </th>
+        <th>StartDate</th>
+        <th>Duration</th>
+        <th>Deadline</th>
+        <th><button class="buttons" onclick = "closeFilter()"> /Filter</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in datas %}
+      <tr>
+        <td hidden>{{ item.id}}</td>
+        <td>{{ item.task}}</td>
+        <td>{{ item.employee}}</td>
+        <td>{{ item.status}}</td>
+        <td><center>{{ item.priority}}</center></td>
+        <td>{{ item.startdate}}</td>
+        <td><center>{{ item.duration}}</center></td>
+        <td>{{ item.deadline}}</td>
+        <td><input class="edit" type="submit" value="Edit"
+            onclick="update('{{ item.id}}','{{ item.task}}','{{ item.employee}}','{{ item.status}}','{{ item.priority}}','{{ item.startdate}}','{{ item.duration}}','{{ item.deadline}}')"></td>
+        <td>
+          <button onclick="document.getElementById('id02{{item.id}}').style.display='block'">Delete</button>
+          <div id="id02{{item.id}}" class="modal">
+            <span onclick="document.getElementById('id02{{item.id}}').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <form method="POST" action="/deleteEmployee">
+              <div class="container">
+                <h1>Delete Task</h1>
+                <p>Are you sure you want to delete {{item.task}} ?</p>
+                <input type="text" hidden value="{{item.id}}" name="id">
+                <div class="clearfix">
+                  <button type="button" onclick="document.getElementById('id02{{item.id}}').style.display='none'" class="cancelbtn">Cancel</button>
+                  <button type="submit" class="deletebtn">Delete</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </td>
+        <td>
+          <form method="POST" action="/completed">
+            <input type="text" hidden value="{{item.id}}" name="id">
+            <input class="complete" type="submit" value="Mark As Completed">
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+</div>
+    </tbody>
+  </table>
+  </div>
+ </div> 
+
+<script>
+
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTableThree");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+
+    td = tr[i].getElementsByTagName("td")[0];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+function myTaskFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myTaskInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTableThree");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+
+    td = tr[i].getElementsByTagName("td")[1];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+
+function myEmployeeFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myEmployeeInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTableThree");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+
+    td = tr[i].getElementsByTagName("td")[2];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+
+function myStatusFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myStatusInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTableThree");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+
+    td = tr[i].getElementsByTagName("td")[3];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+function myPriorityFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myPriorityInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTableThree");
+  tr = table.getElementsByTagName("tr");
+
+  for (i = 0; i < tr.length; i++) {
+
+    td = tr[i].getElementsByTagName("td")[4];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+
+
+var form = document.getElementById("fillForm");
+var display = 1;
+
+function showForm(){
+    
+    if(display == 1)
+    {
+        form.style.display = 'block';
+        display = 0;
+    }
+    else
+    {
+        form.style.display = 'none';
+        display = 1;
+    }
+}
+
+
+var div = document.getElementById("tasksList");
+var two = document.getElementById("tableTwo");
+var display = 1;
+
+function viewMore(){
+    
+    if(display == 1)
+    {
+        div.style.display = 'block';
+        two.style.display = 'none';
+        display = 1;
+    }
+    else
+    {
+        div.style.display = 'none';
+        two.style.display = 'block';
+        display = 1;
+    }
+}
+
+var div = document.getElementById("tasksList");
+var two = document.getElementById("tableTwo");
+var display = 1;
+
+function viewLess(){
+    
+    if(display == 1)
+    {
+        div.style.display = 'none';
+        two.style.display = 'block';
+        display = 1;
+    }
+    else
+    {
+        div.style.display = 'block';
+        two.style.display = 'none';
+        display = 1;
+    }
+}
+
+var div = document.getElementById("tasksList");
+var filter = document.getElementById("tableFilter");
+var two = document.getElementById("tableTwo");
+var display = 1;
+
+function filterTable(){
+    
+    if(display == 1)
+    {
+        div.style.display = 'none';
+        two.style.display = 'none';
+        filter.style.display = 'block';
+        display = 1;
+    }
+    else
+    {
+        div.style.display = 'block';
+        two.style.display = 'none';
+        filter.style.display = 'none';
+        display = 1;
+    }
+}
+
+var div = document.getElementById("tasksList");
+var filter = document.getElementById("tableFilter");
+var two = document.getElementById("tableTwo");
+var display = 1;
+
+function closeFilter(){
+    
+    if(display == 1)
+    {
+        div.style.display = 'block';
+        two.style.display = 'none';
+        filter.style.display = 'none';
+        display = 1;
+    }
+    else
+    {
+        div.style.display = 'none';
+        two.style.display = 'none';
+        filter.style.display = 'block';
+        display = 1;
+    }
+}
+
+
+function isNumber(evt) {
+  evt = (evt) ? evt : window.event;
+  var charCode = (evt.which) ? evt.which : evt.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    return false;
+  }
+  return true;
+}
+
+
+function update(id, task, employee, status, priority,startdate,duration,deadline) {
+  document.getElementById("registerEmp").style.display = "none"
+  document.getElementById("update-user").style.display = "block"
+  document.getElementById("updateEmployee").style.display = "block"
+  document.getElementById("actionForm").style.display = "block"
+  document.getElementsByName('id')[0].value = id;
+  document.getElementsByName('task')[0].value = task;
+  document.getElementsByName('employee')[0].value = employee;
+  document.getElementsByName('status')[0].value = status;
+  document.getElementsByName('priority')[0].value = priority;
+  document.getElementsByName('startdate')[0].value = startdate;
+  document.getElementsByName('duration')[0].value = duration;
+  document.getElementsByName('deadline')[0].value = deadline;
+  document.getElementById('actionForm').action = "/taskupdate";
+}
+
+
+
+// var name = document.getElementsByName('id');
+// mySubmit = document.getElementById('mySubmit');
+// myCheckbox = document.getElementById('myCheckbox'); 
+// form = document.getElementById("checkBox");
+
+// mySubmit.onclick = function(){
+
+//   if(myCheckbox.checked){
+//     document.getElementsByName('id').document.getElementById("checkBox").submit();
+//   }
+  
+// }
+
+
+var modal = document.getElementById('id01');
+
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+
+
+</script>
+
+</body>
+</html>

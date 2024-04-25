@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Create New</title>
+		<link rel="stylesheet" href="/static/NTask.css" type="text/css">
+		<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" type="text/css"> -->
+	</head>
+<body>
+	<section id="nTask">
+		<div class="content">
+
+      <div id="link">
+        <a href="http://127.0.0.1:8080/newtask"><h3>Create New Task</h3></a> 
+    <a href="http://127.0.0.1:8080/opentasks"><h3>List Of Open Tasks</h3></a>
+    <a href="http://127.0.0.1:8080/completedTasks"><h3>Completed Tasks</h3></a>
+    <a href="http://127.0.0.1:8080/alltasks"><h3>All Tasks</h3></a>
+    <a href="http://127.0.0.1:8080/logout"><h3>Logout</h3></a>
+      </div>
+      <div class="msg"><center>{{ msg }}</center></div>
+    </br><h2>Create New Task</h2>
+    
+		  <div id="form">
+      <form id='actionForm' method="POST" action="/taskcreated">
+		    <span>Task</span>
+        <input class="task" type="text" name="task" tabindex=1 />
+        <span>Employee</span>
+        <select name="employee" class="employee" tabindex=2>
+          <option style="display:none" value=" "></option>
+          <option value="Backend">Backend</option>
+          <option value="Frontend">Frontend</option>
+          <option value="Web Developer">Web Developer</option>
+          <option value="Fullstack Developer">Fullstack Developer</option>
+          <option value="Security Developer">Security Developer</option>
+        </select>
+        <span>Status</span>
+        <select name="status" class="status" tabindex=3>
+          <option style="display:none" value=" "></option>
+          <option value="Open">Open</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Completed">Completed</option>
+        </select>
+        <span>Priority Level</span>
+        <input type="number" name="priority" min="1" max="4" class="priority" tabindex=4 />
+        <span>Start Date</span>
+        <input  type="date" name="startdate" class="startdate" tabindex=5 />
+        <span>Duration</span>
+        <input class="duration"  type="text" name="duration" class="duration" tabindex=6 />
+        <span>Deadline</span>
+        <input type="date" name="deadline" class="deadline" tabindex=7 />
+      
+      <input class="submit" type="submit" value="Register" tabindex=8>
+    </form>
+	</div>
+</section>
+</body>
+</html>
+
